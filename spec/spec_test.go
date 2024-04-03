@@ -13,5 +13,5 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSpecByModel(t *testing.T) {
-	fmt.Println(SpecByModel("scc.light.w00a1"))
+	fmt.Println(Detail("scc.light.w00a1"))
 }
