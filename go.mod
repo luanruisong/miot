@@ -1,4 +1,4 @@
-module github.com/luanruisong/miot_spec
+module github.com/luanruisong/miot
 
 go 1.22.1
 

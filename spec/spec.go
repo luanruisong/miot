@@ -1,4 +1,4 @@
-package miot_spec
+package spec
 
 import "github.com/go-resty/resty/v2"
 

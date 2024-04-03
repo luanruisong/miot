@@ -1,4 +1,4 @@
-package miot_spec
+package spec
 
 type (
 	SpecDetail struct {
