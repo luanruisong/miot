@@ -12,7 +12,7 @@ func init() {
 	req = resty.New().SetBaseURL(HOST)
 }
 
-// Search Search for spec by keyWord
+// Search search for spec by keyWord
 func Search(keyWord string) ([]Spec, error) {
 	resp, err := req.R().Get("/s/" + keyWord)
 	if err != nil {
