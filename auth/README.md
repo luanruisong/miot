@@ -5,5 +5,5 @@ Login with XiaoMi Account
 ## usage
 
 ```go
-auth.Login("xiaomiio")
+auth.Login("xiaomiio","user","pass")
 ```

@@ -7,5 +7,5 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-	fmt.Println(Login(utils.SID_XIAOMIIO, "17800252416", "shengri900607"), "====")
+	fmt.Println(Login(utils.SID_XIAOMIIO, "user", "pass"), "====")
 }
