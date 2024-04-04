@@ -4,8 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	"github.com/luanruisong/miot/consts"
+	"github.com/luanruisong/miot/token"
+	"github.com/luanruisong/miot/utils"
 	"net/http"
+	"net/url"
+	"path"
 )
 
 var (
@@ -17,7 +20,7 @@ func init() {
 }
 
 func AuthReq() *resty.Request {
-	app := getToken()
+	app := token.GetToken()
 	cookies := append([]*http.Cookie{}, &http.Cookie{
 		Name:  "sdkVersion",
 		Value: "3.9",
@@ -41,7 +44,7 @@ func AuthReq() *resty.Request {
 }
 
 func ApiReq(sid string) *resty.Request {
-	app := getToken()
+	app := token.GetToken()
 	if !app.IsLogin() {
 		panic(errors.New("need login"))
 	}
@@ -63,9 +66,15 @@ func ApiReq(sid string) *resty.Request {
 }
 
 func AuthURI(uri string) string {
-	return URI(consts.AuthHost, uri)
+	return _uri(utils.AuthHost, uri)
 }
 
 func AppURI(uri string) string {
-	return URI(consts.AppHost, uri)
+	return _uri(utils.AppHost, uri)
+}
+
+func _uri(host, uri string) string {
+	u, _ := url.Parse(host)
+	u.Path = path.Join(u.Path, uri)
+	return u.String()
 }
