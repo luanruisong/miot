@@ -13,7 +13,7 @@ func SignAppPost[T any](sid, uri string, data any) (T, error) {
 		return res, err
 	}
 	singer := token.GetToken().GetSubToken(sid).Singer()
-	resp, err := ApiReq(sid).SetFormData(singer.SignData(uri, data)).Post(AppURI(uri))
+	resp, err := AppReq(sid).SetFormData(singer.SignData(uri, data)).Post(AppURI(uri))
 	if err != nil {
 		return res, err
 	}

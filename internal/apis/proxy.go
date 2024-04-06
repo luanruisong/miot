@@ -42,7 +42,7 @@ func AuthReq() *resty.Request {
 	return req.R().SetCookies(cookies).SetHeaders(header)
 }
 
-func ApiReq(sid string) *resty.Request {
+func AppReq(sid string) *resty.Request {
 	if err := token.CheckLogin(sid); err != nil {
 		panic(err)
 	}
