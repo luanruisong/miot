@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/luanruisong/miot/consts"
 	"github.com/luanruisong/miot/internal/apis"
 	"github.com/luanruisong/miot/internal/token"
 	"github.com/luanruisong/miot/internal/utils"
@@ -85,9 +86,12 @@ func generateServiceToken(location string, nonce int64, ssecurity string) (strin
 	return "", errors.New("can not find service Token")
 }
 
-func AutoLogin(sid, user, pass string) error {
+func AutoLogin(sid string) error {
 	if err := token.CheckLogin(sid); err != nil {
-		return Login(sid, user, pass)
+		if err = consts.CheckEnv(); err != nil {
+			return err
+		}
+		return Login(sid, consts.GetUser(), consts.GetPass())
 	}
 	return nil
 }

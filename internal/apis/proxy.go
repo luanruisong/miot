@@ -3,8 +3,8 @@ package apis
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"github.com/luanruisong/miot/consts"
 	"github.com/luanruisong/miot/internal/token"
-	"github.com/luanruisong/miot/internal/utils"
 	"net/http"
 	"net/url"
 	"path"
@@ -65,11 +65,11 @@ func ApiReq(sid string) *resty.Request {
 }
 
 func AuthURI(uri string) string {
-	return _uri(utils.AuthHost, uri)
+	return _uri(consts.AuthHost, uri)
 }
 
 func AppURI(uri string) string {
-	return _uri(utils.AppHost, uri)
+	return _uri(consts.AppHost, uri)
 }
 
 func _uri(host, uri string) string {

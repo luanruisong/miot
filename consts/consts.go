@@ -1,4 +1,4 @@
-package utils
+package consts
 
 const (
 	AppHost  = "https://api.io.mi.com/app"

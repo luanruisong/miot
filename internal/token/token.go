@@ -3,6 +3,7 @@ package token
 import (
 	"errors"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/luanruisong/miot/consts"
 	"github.com/luanruisong/miot/internal/utils"
 	"os"
 	"path"
@@ -62,7 +63,7 @@ func GetToken() *Token {
 }
 
 func filePath() string {
-	home := os.Getenv(utils.EnvHome)
+	home := os.Getenv(consts.EnvHome)
 	if len(home) == 0 {
 		home = path.Join(os.Getenv("HOME"), "/.miot/")
 	}

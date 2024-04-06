@@ -2,10 +2,10 @@ package auth
 
 import (
 	"fmt"
-	"github.com/luanruisong/miot/internal/utils"
+	"github.com/luanruisong/miot/consts"
 	"testing"
 )
 
 func TestLogin(t *testing.T) {
-	fmt.Println(Login(utils.SID_XIAOMIIO, "user", "pass"), "====")
+	fmt.Println(Login(consts.SID_XIAOMIIO, "user", "pass"), "====")
 }
