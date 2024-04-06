@@ -55,8 +55,7 @@ func Login(sid, user, pass string) error {
 	if err != nil {
 		return err
 	}
-	tk.SetSubToken(sid, ret.Ssecurity, serviceToken)
-	return tk.Sync()
+	return tk.SetSubToken(sid, ret.Ssecurity, serviceToken).Sync()
 }
 
 func generateServiceToken(location string, nonce int64, ssecurity string) (string, error) {
@@ -80,4 +79,11 @@ func generateServiceToken(location string, nonce int64, ssecurity string) (strin
 		}
 	}
 	return "", errors.New("can not find service Token")
+}
+
+func AutoLogin(sid, user, pass string) error {
+	if err := token.CheckLogin(sid); err != nil {
+		return Login(sid, user, pass)
+	}
+	return nil
 }

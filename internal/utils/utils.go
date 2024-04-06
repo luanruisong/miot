@@ -11,11 +11,11 @@ import (
 	"strings"
 )
 
-func RandStr(length int) string {
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+func SRand(length int) string {
 	b := make([]rune, length)
 	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+		b[i] = rune(rand.Intn(26) + 65)
+		fmt.Println(b[i], string(b))
 	}
 	return string(b)
 }

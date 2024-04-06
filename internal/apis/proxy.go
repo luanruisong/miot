@@ -1,7 +1,6 @@
 package apis
 
 import (
-	"errors"
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/luanruisong/miot/internal/token"
@@ -44,19 +43,19 @@ func AuthReq() *resty.Request {
 }
 
 func ApiReq(sid string) *resty.Request {
-	app := token.GetToken()
-	if !app.IsLogin() {
-		panic(errors.New("need login"))
+	if err := token.CheckLogin(sid); err != nil {
+		panic(err)
 	}
+	tk := token.GetToken()
 	cookies := append([]*http.Cookie{}, &http.Cookie{
 		Name:  "PassportDeviceId",
-		Value: app.DeviceId,
+		Value: tk.DeviceId,
 	}, &http.Cookie{
 		Name:  "userId",
-		Value: fmt.Sprintf("%d", app.UserId),
+		Value: fmt.Sprintf("%d", tk.UserId),
 	}, &http.Cookie{
 		Name:  "serviceToken",
-		Value: app.GetSubToken(sid).ServiceToken,
+		Value: tk.GetSubToken(sid).ServiceToken,
 	})
 	header := map[string]string{
 		"User-Agent":                 "APP/com.xiaomi.mihome APPV/6.0.103 iosPassportSDK/3.9.0 iOS/14.4 miHSTS",

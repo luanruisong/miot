@@ -1,10 +1,5 @@
 package device
 
-import (
-	"errors"
-	"github.com/luanruisong/miot/internal/utils"
-)
-
 type DeviceInfo struct {
 	Did         string `json:"did"`
 	Token       string `json:"token"`
@@ -59,19 +54,4 @@ type ActionResult struct {
 	OaCost      int    `json:"oa_cost"`
 	OaRpcCost   int    `json:"_oa_rpc_cost"`
 	WithLatency int    `json:"withLatency"`
-}
-
-type Ret[T any] struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Result  T      `json:"result"`
-}
-
-func Decode[T any](data []byte) (T, error) {
-	ret, err := utils.Decode[Ret[T]](data)
-	if ret.Code != 0 {
-		var zero T
-		return zero, errors.New(ret.Message)
-	}
-	return ret.Result, err
 }

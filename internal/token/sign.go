@@ -10,15 +10,19 @@ import (
 	"time"
 )
 
-func NewSinger(ssecurity string) *Singer {
-	return &Singer{ssecurity}
+type Singer interface {
+	SignData(uri string, data any) map[string]string
 }
 
-type Singer struct {
+func NewSinger(ssecurity string) Singer {
+	return &AppSinger{ssecurity}
+}
+
+type AppSinger struct {
 	ssecurity string
 }
 
-func (s *Singer) SignData(uri string, data any) map[string]string {
+func (s *AppSinger) SignData(uri string, data any) map[string]string {
 	var jsonData string
 	switch data.(type) {
 	case string:
@@ -48,7 +52,7 @@ func (s *Singer) SignData(uri string, data any) map[string]string {
 	}
 }
 
-func (s *Singer) SignNonce(ssecurity, nonce string) string {
+func (s *AppSinger) SignNonce(ssecurity, nonce string) string {
 	// 解码ssecurity和nonce
 	ssecurityBytes, _ := base64.StdEncoding.DecodeString(ssecurity)
 	nonceBytes, _ := base64.StdEncoding.DecodeString(nonce)
@@ -69,7 +73,7 @@ func (s *Singer) SignNonce(ssecurity, nonce string) string {
 	return encoded
 }
 
-func (s *Singer) GenerateNonce() string {
+func (s *AppSinger) GenerateNonce() string {
 	// 生成8字节的随机数
 	randomBytes := make([]byte, 8)
 	_, err := rand.Read(randomBytes)

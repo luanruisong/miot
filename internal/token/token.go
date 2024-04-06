@@ -1,11 +1,11 @@
 package token
 
 import (
+	"errors"
 	jsoniter "github.com/json-iterator/go"
-	utils2 "github.com/luanruisong/miot/internal/utils"
+	"github.com/luanruisong/miot/internal/utils"
 	"os"
 	"path"
-	"strings"
 )
 
 type SubToken struct {
@@ -20,7 +20,7 @@ type Token struct {
 	Tks       map[string]*SubToken
 }
 
-func (st *SubToken) Singer() *Singer {
+func (st *SubToken) Singer() Singer {
 	return NewSinger(st.Ssecurity)
 }
 
@@ -36,11 +36,12 @@ func (tk *Token) GetSubToken(sid string) *SubToken {
 	return tk.Tks[sid]
 }
 
-func (tk *Token) SetSubToken(sid, ssecurity, serviceToken string) {
+func (tk *Token) SetSubToken(sid, ssecurity, serviceToken string) *Token {
 	tk.Tks[sid] = &SubToken{
 		ServiceToken: serviceToken,
 		Ssecurity:    ssecurity,
 	}
+	return tk
 }
 
 func (tk *Token) Sync() error {
@@ -51,7 +52,7 @@ func (tk *Token) Sync() error {
 func GetToken() *Token {
 	if _tks == nil {
 		_tks = &Token{
-			DeviceId:  strings.ToUpper(utils2.RandStr(16)),
+			DeviceId:  utils.SRand(16),
 			UserId:    0,
 			PassToken: "",
 			Tks:       make(map[string]*SubToken),
@@ -61,11 +62,11 @@ func GetToken() *Token {
 }
 
 func filePath() string {
-	home := os.Getenv(utils2.EnvHome)
+	home := os.Getenv(utils.EnvHome)
 	if len(home) == 0 {
 		home = path.Join(os.Getenv("HOME"), "/.miot/")
 	}
-	if ok, _ := utils2.PathExists(home); !ok {
+	if ok, _ := utils.PathExists(home); !ok {
 		if err := os.MkdirAll(home, os.ModePerm); err != nil {
 			panic(err)
 		}
@@ -73,13 +74,21 @@ func filePath() string {
 	return path.Join(home, "tks.json")
 }
 
+func CheckLogin(sid string) error {
+	if tk := GetToken(); !tk.IsLogin() || tk.GetSubToken(sid) == nil {
+		return NoLoginErr
+	}
+	return nil
+}
+
 var (
-	_tks *Token
+	_tks       *Token
+	NoLoginErr = errors.New("not login")
 )
 
 func init() {
 	fp := filePath()
-	ok, _ := utils2.PathExists(fp)
+	ok, _ := utils.PathExists(fp)
 	if ok {
 		b, err := os.ReadFile(fp)
 		if err != nil {
