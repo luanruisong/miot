@@ -28,23 +28,7 @@ func Login(sid, user, pass string) error {
 		return err
 	}
 	if ret.Code != 0 {
-		data := map[string]string{
-			"_json":    "true",
-			"qs":       ret.Qs,
-			"sid":      ret.Sid,
-			"_sign":    ret.Sign,
-			"callback": ret.Callback,
-			"user":     user,
-			"hash":     utils.GetMD5Hash(pass),
-		}
-		resp, err = apis.AuthReq().SetFormData(data).Post(apis.AuthURI("/pass/serviceLoginAuth2"))
-		if err != nil {
-			return err
-		}
-		if !resp.IsSuccess() {
-			return fmt.Errorf("resp err:%d", resp.StatusCode())
-		}
-		ret, err = utils.Decode[ServiceLoginRet](resp.Body())
+		ret, err = serverLoginAuth(ret, user, pass)
 		if err != nil {
 			return err
 		}
@@ -56,6 +40,26 @@ func Login(sid, user, pass string) error {
 		return err
 	}
 	return tk.SetSubToken(sid, ret.Ssecurity, serviceToken).Sync()
+}
+
+func serverLoginAuth(req ServiceLoginRet, user, pass string) (ServiceLoginRet, error) {
+	data := map[string]string{
+		"_json":    "true",
+		"qs":       req.Qs,
+		"sid":      req.Sid,
+		"_sign":    req.Sign,
+		"callback": req.Callback,
+		"user":     user,
+		"hash":     utils.GetMD5Hash(pass),
+	}
+	resp, err := apis.AuthReq().SetFormData(data).Post(apis.AuthURI("/pass/serviceLoginAuth2"))
+	if err != nil {
+		return ServiceLoginRet{}, err
+	}
+	if !resp.IsSuccess() {
+		return ServiceLoginRet{}, fmt.Errorf("resp err:%d", resp.StatusCode())
+	}
+	return utils.Decode[ServiceLoginRet](resp.Body())
 }
 
 func generateServiceToken(location string, nonce int64, ssecurity string) (string, error) {
