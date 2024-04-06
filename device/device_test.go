@@ -6,5 +6,18 @@ import (
 )
 
 func TestDeviceList(t *testing.T) {
-	fmt.Println(List(true, 0))
+	ret, _ := List(false, 0)
+	for _, v := range ret {
+		fmt.Println(v.Model)
+	}
+}
+
+func TestAction(t *testing.T) {
+	fmt.Println(Action(&ActionDetail{
+		Did:  "{did}",
+		Siid: 5,
+		Aiid: 4,
+		In:   []any{"今天天气", 1}, // 0 : silent-execution
+	}))
+
 }

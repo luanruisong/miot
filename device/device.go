@@ -1,7 +1,6 @@
 package device
 
 import (
-	"errors"
 	"fmt"
 	"github.com/luanruisong/miot/apis"
 	"github.com/luanruisong/miot/auth"
@@ -30,12 +29,36 @@ func List(getVirtualModel bool, getHuamiDevices int) ([]DeviceInfo, error) {
 	if !resp.IsSuccess() {
 		return nil, fmt.Errorf("resp err:%d", resp.StatusCode())
 	}
-	ret, err := utils.Decode[DeviceListRet](resp.Body())
+	ret, err := Decode[DeviceListResult](resp.Body())
 	if err != nil {
 		return nil, err
 	}
-	if ret.Code != 0 {
-		return nil, errors.New(ret.Message)
+	return ret.List, nil
+}
+
+func Action(action *ActionDetail) (*ActionResult, error) {
+	tk := token.GetToken()
+	if !tk.IsLogin() || !tk.IsSubTokenLogin(utils.SID_XIAOMIIO) {
+		if err := auth.Login(utils.SID_XIAOMIIO, utils.GetUser(), utils.GetPass()); err != nil {
+			panic(err)
+		}
 	}
-	return ret.Result.List, nil
+	subToken := tk.GetSubToken(utils.SID_XIAOMIIO)
+	uri := "/miotspec/action"
+	data := map[string]any{
+		"params": action,
+	}
+	singer := subToken.Singer()
+	resp, err := apis.ApiReq(utils.SID_XIAOMIIO).SetFormData(singer.SignData(uri, data)).Post(apis.AppURI(uri))
+	if err != nil {
+		return nil, err
+	}
+	if !resp.IsSuccess() {
+		return nil, fmt.Errorf("resp err:%d", resp.StatusCode())
+	}
+	ret, err := Decode[ActionResult](resp.Body())
+	if err != nil {
+		return nil, err
+	}
+	return &ret, nil
 }

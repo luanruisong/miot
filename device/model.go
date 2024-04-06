@@ -1,5 +1,10 @@
 package device
 
+import (
+	"errors"
+	"github.com/luanruisong/miot/utils"
+)
+
 type DeviceInfo struct {
 	Did         string `json:"did"`
 	Token       string `json:"token"`
@@ -31,10 +36,42 @@ type DeviceInfo struct {
 	DescTime    []int  `json:"desc_time,omitempty"`
 }
 
-type DeviceListRet struct {
+type DeviceListResult struct {
+	List []DeviceInfo `json:"list"`
+}
+
+type ActionDetail struct {
+	Did  string `json:"did"`
+	Siid int    `json:"siid"`
+	Aiid int    `json:"aiid"`
+	In   []any  `json:"in"`
+}
+
+type ActionResult struct {
+	Did         string `json:"did"`
+	Miid        int    `json:"miid"`
+	Siid        int    `json:"siid"`
+	Aiid        int    `json:"aiid"`
+	Code        int    `json:"code"`
+	ExeTime     int    `json:"exe_time"`
+	NetCost     int    `json:"net_cost"`
+	Otlocalts   int64  `json:"otlocalts"`
+	OaCost      int    `json:"oa_cost"`
+	OaRpcCost   int    `json:"_oa_rpc_cost"`
+	WithLatency int    `json:"withLatency"`
+}
+
+type Ret[T any] struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
-	Result  struct {
-		List []DeviceInfo `json:"list"`
-	} `json:"result"`
+	Result  T      `json:"result"`
+}
+
+func Decode[T any](data []byte) (T, error) {
+	ret, err := utils.Decode[Ret[T]](data)
+	if ret.Code != 0 {
+		var zero T
+		return zero, errors.New(ret.Message)
+	}
+	return ret.Result, err
 }
