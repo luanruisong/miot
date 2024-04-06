@@ -5,9 +5,9 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"github.com/luanruisong/miot/apis"
-	"github.com/luanruisong/miot/token"
-	"github.com/luanruisong/miot/utils"
+	"github.com/luanruisong/miot/internal/apis"
+	"github.com/luanruisong/miot/internal/token"
+	"github.com/luanruisong/miot/internal/utils"
 	"net/url"
 )
 

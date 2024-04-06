@@ -2,7 +2,7 @@ package device
 
 import (
 	"errors"
-	"github.com/luanruisong/miot/utils"
+	"github.com/luanruisong/miot/internal/utils"
 )
 
 type DeviceInfo struct {

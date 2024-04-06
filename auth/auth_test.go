@@ -2,7 +2,7 @@ package auth
 
 import (
 	"fmt"
-	"github.com/luanruisong/miot/utils"
+	"github.com/luanruisong/miot/internal/utils"
 	"testing"
 )
 

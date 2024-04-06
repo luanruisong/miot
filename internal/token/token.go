@@ -2,7 +2,7 @@ package token
 
 import (
 	jsoniter "github.com/json-iterator/go"
-	"github.com/luanruisong/miot/utils"
+	utils2 "github.com/luanruisong/miot/internal/utils"
 	"os"
 	"path"
 	"strings"
@@ -51,7 +51,7 @@ func (tk *Token) Sync() error {
 func GetToken() *Token {
 	if _tks == nil {
 		_tks = &Token{
-			DeviceId:  strings.ToUpper(utils.RandStr(16)),
+			DeviceId:  strings.ToUpper(utils2.RandStr(16)),
 			UserId:    0,
 			PassToken: "",
 			Tks:       make(map[string]*SubToken),
@@ -61,11 +61,11 @@ func GetToken() *Token {
 }
 
 func filePath() string {
-	home := os.Getenv(utils.EnvHome)
+	home := os.Getenv(utils2.EnvHome)
 	if len(home) == 0 {
 		home = path.Join(os.Getenv("HOME"), "/.miot/")
 	}
-	if ok, _ := utils.PathExists(home); !ok {
+	if ok, _ := utils2.PathExists(home); !ok {
 		if err := os.MkdirAll(home, os.ModePerm); err != nil {
 			panic(err)
 		}
@@ -79,7 +79,7 @@ var (
 
 func init() {
 	fp := filePath()
-	ok, _ := utils.PathExists(fp)
+	ok, _ := utils2.PathExists(fp)
 	if ok {
 		b, err := os.ReadFile(fp)
 		if err != nil {
