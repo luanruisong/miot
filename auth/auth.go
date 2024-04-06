@@ -12,7 +12,6 @@ import (
 )
 
 func Login(sid, user, pass string) error {
-	tk := token.GetToken()
 	resp, err := apis.AuthReq().SetQueryParams(map[string]string{
 		"sid":   sid,
 		"_json": "true",
@@ -33,6 +32,7 @@ func Login(sid, user, pass string) error {
 			return err
 		}
 	}
+	tk := token.GetToken()
 	tk.UserId = ret.UserId
 	tk.PassToken = ret.PassToken
 	serviceToken, err := generateServiceToken(ret.Location, ret.Nonce, ret.Ssecurity)
