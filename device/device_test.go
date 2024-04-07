@@ -19,5 +19,4 @@ func TestAction(t *testing.T) {
 		Aiid: 4,
 		In:   []any{"今天天气", 1}, // 0 : silent-execution
 	}))
-
 }
